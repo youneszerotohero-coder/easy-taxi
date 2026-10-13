@@ -1,0 +1,146 @@
+{
+  "hero-luxury-car": [
+    640,
+    1080,
+    1600,
+    2000
+  ],
+  "van-headlights": [
+    640,
+    1080,
+    1600
+  ],
+  "chauffeur-van": [
+    640,
+    1080,
+    1600
+  ],
+  "chauffeur-door": [
+    640,
+    1080,
+    1600
+  ],
+  "driver-hands": [
+    640,
+    1080,
+    1600
+  ],
+  "woman-exit-car": [
+    640,
+    1080,
+    1600
+  ],
+  "airport-traveller": [
+    640,
+    1080,
+    1600
+  ],
+  "airport-silhouettes": [
+    640,
+    1080,
+    1600
+  ],
+  "airport-plane": [
+    640,
+    1080,
+    1600
+  ],
+  "airport-sunset": [
+    640,
+    1080,
+    1600
+  ],
+  "hospital-building": [
+    640,
+    1080,
+    1600
+  ],
+  "hospital-lobby": [
+    640,
+    1080,
+    1600
+  ],
+  "care-walker": [
+    640,
+    1080,
+    1600
+  ],
+  "care-nurse": [
+    640,
+    1080,
+    1600
+  ],
+  "care-caregiver": [
+    640,
+    1080,
+    1600
+  ],
+  "disneyland-paris": [
+    640,
+    1080,
+    1600
+  ],
+  "highway-night": [
+    640,
+    1080,
+    1600,
+    2000
+  ],
+  "city-trails": [
+    640,
+    1080,
+    1600,
+    2000
+  ],
+  "highway-dusk": [
+    640,
+    1080,
+    1600,
+    2000
+  ],
+  "rear-seats": [
+    640,
+    1080,
+    1600
+  ],
+  "luggage-chauffeur": [
+    640,
+    1080,
+    1600
+  ],
+  "luggage-couple": [
+    640,
+    1080,
+    1600
+  ],
+  "paris-champs": [
+    640,
+    1080,
+    1600
+  ],
+  "paris-street": [
+    640,
+    1080,
+    1600
+  ],
+  "station": [
+    640,
+    1080,
+    1600
+  ],
+  "mercedes-grille": [
+    640,
+    1080,
+    1600
+  ],
+  "mercedes-front": [
+    640,
+    1080,
+    1600
+  ],
+  "taxi-signs": [
+    640,
+    1080,
+    1600
+  ]
+}

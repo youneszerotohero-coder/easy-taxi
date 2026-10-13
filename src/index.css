@@ -1,0 +1,169 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Inter Variable", ui-sans-serif, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Night palette — ink, paper and the amber of a lit taxi sign */
+  --color-ink-950: #070708;
+  --color-ink-900: #0b0b0c;
+  --color-ink-800: #131315;
+  --color-ink-700: #1c1c1f;
+  --color-ink-600: #2a2a2e;
+  --color-ink-500: #45454b;
+  --color-ink-400: #75757c;
+  --color-ink-300: #a3a29d;
+
+  --color-paper: #f6f4ef;
+  --color-paper-200: #ece8df;
+  --color-paper-300: #dcd5c5;
+
+  --color-amber: #ffb31a;
+  --color-amber-300: #ffc94d;
+  --color-amber-600: #e09400;
+  --color-amber-700: #a86d00; /* amber for text on white (readable contrast) */
+
+  --color-care: #6fd3b8;
+  --color-care-700: #13856a;
+
+  /* Motion */
+  --ease-osmo: cubic-bezier(0.625, 0.05, 0, 1);
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+    background: #fff;
+    color: var(--color-ink-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: #fff;
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-amber);
+    color: var(--color-ink-900);
+  }
+  button {
+    cursor: pointer;
+  }
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+  /* Hide date/time picker indicator chrome on dark fields */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    opacity: 0.5;
+    cursor: pointer;
+  }
+}
+
+/* Unlayered on purpose so it beats lenis.css (also unlayered): Lenis stops with `overflow: clip`, which ignores
+   scrollbar-gutter — the viewport would widen by the scrollbar while locked and anything measured then
+   (pinned sections) would overflow by that width afterwards. `hidden` keeps the gutter. */
+html.is-locked,
+html.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Short screens (laptops ≤ 780px tall, small phones): the booking form compacts so no step needs scrolling */
+@custom-variant short (@media (max-height: 780px));
+/* Very short screens (≤ 700px tall phones) */
+@custom-variant tiny (@media (max-height: 700px));
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 560;
+  letter-spacing: -0.035em;
+  line-height: 0.92;
+  font-variation-settings: "wdth" 85;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility grain {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Dashed road marking */
+@utility road-dash {
+  background-image: linear-gradient(90deg, currentColor 55%, transparent 0);
+  background-size: 2.2rem 100%;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(255 179 26 / 0.55); }
+  60% { box-shadow: 0 0 0 0.6rem rgb(255 179 26 / 0); }
+}
+
+.animate-marquee {
+  animation: marquee var(--marquee-duration, 40s) linear infinite;
+}
+.animate-blink {
+  animation: blink 1.6s ease-in-out infinite;
+}
+.animate-glow {
+  animation: glow 2.2s ease-out infinite;
+}
+
+/* Split text lines need a mask to slide out of */
+.split-line {
+  overflow: clip;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}

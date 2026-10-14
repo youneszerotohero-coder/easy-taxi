@@ -4,11 +4,18 @@ Vite + React 19 + Tailwind v4 + GSAP 3 (ScrollTrigger, SplitText, CustomEase) + 
 
 ```bash
 npm install
-npm run dev
+npm run dev      # développement
+npm run build    # production : build + pré-rendu HTML de chaque page + sitemap.xml / robots.txt → dist/
 ```
 
+Le dossier `dist/` est un site statique : à héberger en HTTPS (Netlify, Vercel, Cloudflare Pages, nginx…)
+avec compression gzip/brotli. `/services/<slug>` → `services/<slug>/index.html`, pages inconnues → `404.html`.
+
+SEO : voir `docs/SEO-PLAN.md` (fait / à faire). Le domaine final se règle dans `site.url` (`src/data/site.js`).
+
 ## Où modifier quoi
-- `src/data/site.js` — nom, téléphone, e-mail, WhatsApp, services, flotte, avis, FAQ (**placeholders à remplacer**).
+- `src/data/site.js` — nom, téléphone, WhatsApp, SIRET, commune de rattachement, services, flotte, avis, FAQ.
+- `src/data/seo.js` — titres, descriptions, textes SEO par page et données structurées (JSON-LD).
 - `public/images/` — photos Unsplash (licence libre) en WebP, en 3–4 tailles (640 / 1080 / 1600 / 2000 px).
   Pour ajouter ou changer une photo : l’ajouter dans `scripts/images.py`, puis `python scripts/images.py`
   (régénère les tailles et `src/data/images.json`, utilisé par `src/lib/img.js` pour le `srcset`).

@@ -331,7 +331,7 @@ export default function BookingModal() {
             {/* ───────── Aside ───────── */}
             <aside data-q-item className="relative hidden overflow-hidden rounded-[1.4rem] text-white md:flex md:flex-col">
               <div data-aside-img className="absolute inset-0">
-                <img {...img('/images/chauffeur-van.webp', '40vw')} alt="" loading="lazy" decoding="async" className={cx('absolute inset-0 size-full object-cover transition-opacity duration-700', medical ? 'opacity-0' : 'opacity-100')} />
+                <img {...img('/images/driver-hands.webp', '40vw')} alt="" loading="lazy" decoding="async" className={cx('absolute inset-0 size-full object-cover transition-opacity duration-700', medical ? 'opacity-0' : 'opacity-100')} />
                 <img {...img('/images/care-nurse.webp', '40vw')} alt="" loading="lazy" decoding="async" className={cx('absolute inset-0 size-full object-cover transition-opacity duration-700', medical ? 'opacity-100' : 'opacity-0')} />
               </div>
               <div className="absolute inset-0 bg-gradient-to-b from-ink-950/80 via-ink-950/55 to-ink-950/95" />
@@ -455,11 +455,11 @@ export default function BookingModal() {
                       type="submit"
                       className={cx(
                         'group inline-flex h-13 items-center gap-3 rounded-full pr-2 pl-6 font-medium transition-colors duration-300',
-                        last ? 'bg-amber text-ink-900 hover:bg-amber-300' : 'bg-ink-900 text-white hover:bg-ink-700',
+                        last ? 'bg-amber text-ink-900 hover:bg-amber-300' : 'bg-sky-600 text-white hover:bg-sky-700',
                       )}
                     >
                       {status === 'sending' ? 'Envoi en cours…' : last ? (medical ? 'Demander le transport' : 'Confirmer la réservation') : 'Continuer'}
-                      <span className={cx('flex size-9 items-center justify-center rounded-full text-white', last ? 'bg-ink-900' : 'bg-amber text-ink-900')}>
+                      <span className={cx('flex size-9 items-center justify-center rounded-full text-white', last ? 'bg-ink-900' : 'bg-white/20')}>
                         {status === 'sending' ? (
                           <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
                         ) : (
@@ -530,7 +530,7 @@ function Success({ form, reference, onClose, onAgain }) {
       </span>
       <h3 data-s-item className="display mt-8 text-[clamp(2.2rem,4vw,3.6rem)]">
         Merci {form.firstName || ''} !<br />
-        <span className="text-amber-700">{medical ? 'Demande transmise.' : 'Course enregistrée.'}</span>
+        <span className="text-amber-600">{medical ? 'Demande transmise.' : 'Course enregistrée.'}</span>
       </h3>
       <p data-s-item className="mt-4 max-w-md text-ink-500">
         Nous vous appelons au {form.mode === 'private' ? form.dial + ' ' : ''}
@@ -550,7 +550,7 @@ function Success({ form, reference, onClose, onAgain }) {
         Référence <span className="text-ink-900">{reference}</span>
       </p>
       <div data-s-item className="mt-8 flex flex-wrap gap-2">
-        <button type="button" onClick={onClose} className="inline-flex h-12 items-center rounded-full bg-ink-900 px-6 font-medium text-white transition-colors hover:bg-ink-700">
+        <button type="button" onClick={onClose} className="inline-flex h-12 items-center rounded-full bg-sky-600 px-6 font-medium text-white transition-colors hover:bg-sky-700">
           Terminer
         </button>
         <button type="button" onClick={onAgain} className="inline-flex h-12 items-center rounded-full px-6 text-ink-700 ring-1 ring-ink-900/20 transition-colors hover:bg-ink-900/[0.05] hover:text-ink-900">

@@ -16,7 +16,7 @@ function Row({ item, open, onToggle, i }) {
     const el = body.current
     if (!mounted.current) {
       mounted.current = true
-      gsap.set(el, { height: open ? 'auto' : 0 })
+      el.style.height = open ? 'auto' : '0px' // plain style: no forced layout read at load
       return
     }
     const d = prefersReducedMotion() ? 0 : 1

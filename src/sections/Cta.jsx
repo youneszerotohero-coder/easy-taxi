@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { img } from '../lib/img'
-import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { useBooking } from '../context/BookingContext'
 import { site } from '../data/site'
 import { Magnetic, SplitHeading } from '../components/anim'
@@ -14,7 +15,7 @@ export default function Cta() {
   const { openBooking } = useBooking()
   const root = useRef(null)
 
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       // Streak loops only run while the section is on screen
@@ -47,7 +48,7 @@ export default function Cta() {
               <a href={site.phoneHref} className="inline-flex h-14 items-center gap-3 rounded-full bg-white/10 px-6 backdrop-blur-md transition-colors hover:bg-white/20">
                 <Phone className="size-5 text-amber" /> {site.phone}
               </a>
-              <a href={site.whatsapp} target="_blank" rel="noreferrer" className="inline-flex h-14 items-center gap-3 rounded-full bg-[#25d366]/20 px-6 text-[#7cf0a6] backdrop-blur-md transition-colors hover:bg-[#25d366]/25">
+              <a href={site.whatsapp} target="_blank" rel="noreferrer" className="inline-flex h-14 items-center gap-3 rounded-full bg-[#25d366]/20 px-6 text-[#7cf0a6] backdrop-blur-md transition-colors hover:bg-[#25d366]/30">
                 <Whatsapp className="size-5" /> WhatsApp
               </a>
             </div>

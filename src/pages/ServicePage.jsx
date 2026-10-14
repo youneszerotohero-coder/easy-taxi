@@ -1,9 +1,12 @@
 import { useRef } from 'react'
 import { img } from '../lib/img'
 import { useParams } from 'react-router'
-import { gsap, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { intro } from '../transition/PageTransition'
-import { serviceBySlug, services } from '../data/site'
+import { serviceBySlug, services, site } from '../data/site'
+import { serviceSeo } from '../data/seo'
+import { posts } from '../data/blog'
 import { useBooking } from '../context/BookingContext'
 import { ParallaxImage, Reveal, SplitHeading } from '../components/anim'
 import Button from '../components/Button'
@@ -21,7 +24,7 @@ export default function ServicePage() {
   const root = useRef(null)
   const delay = intro.delay
 
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (!s || prefersReducedMotion()) return
       gsap.fromTo('[data-s-hero]', { clipPath: 'inset(30% 12% 0% 12% round 2rem)' }, { clipPath: 'inset(0% 0% 0% 0% round 2rem)', duration: 1.8, ease: 'expo.inOut', delay: delay + 0.3 })
@@ -34,6 +37,8 @@ export default function ServicePage() {
   if (!s) return <NotFound />
   const i = services.indexOf(s)
   const next = services[(i + 1) % services.length]
+  const related = services.filter((r) => r.category === s.category && r.slug !== s.slug).slice(0, 5)
+  const guides = posts.filter((p) => p.services.includes(s.slug)).slice(0, 3)
 
   return (
     <div ref={root}>
@@ -41,12 +46,17 @@ export default function ServicePage() {
         <div className="pointer-events-none absolute top-[-30%] left-[30%] size-[50rem] rounded-full bg-amber/15 blur-[140px]" />
         <div className="relative mx-auto w-full max-w-[1440px]">
           <Reveal immediate delay={delay + 0.2}>
-            <p data-reveal className="eyebrow flex items-center gap-3 text-amber-700">
+            {/* Breadcrumb (also described in JSON-LD) */}
+            <nav data-reveal aria-label="Fil d’Ariane" className="eyebrow flex flex-wrap items-center gap-x-3 gap-y-1 text-amber-700">
+              <TLink to="/" className="text-ink-400 hover:text-ink-900">
+                Accueil
+              </TLink>
+              <span className="text-ink-300">/</span>
               <TLink to="/#services" className="text-ink-400 hover:text-ink-900">
                 Services
               </TLink>
-              <span className="text-ink-300">/</span> {s.index} — {s.short}
-            </p>
+              <span className="text-ink-300">/</span> <span aria-current="page">{s.short}</span>
+            </nav>
           </Reveal>
           <SplitHeading as="h1" immediate delay={delay + 0.3} type="chars" className="display mt-6 max-w-[14ch] text-[clamp(3rem,8.5vw,8.5rem)]">
             {s.title}
@@ -108,6 +118,61 @@ export default function ServicePage() {
         </div>
       </section>
 
+      {/* Local, in-depth copy for this service + links to related services (helps visitors and search engines) */}
+      <section className="bg-paper px-5 py-24 text-ink-900 md:px-10 md:py-32">
+        <div className="mx-auto grid max-w-[1440px] gap-14 lg:grid-cols-[1.25fr_0.75fr] lg:gap-24">
+          <Reveal>
+            <h2 data-reveal className="display text-[clamp(2rem,4vw,3.4rem)]">
+              {s.title} : ce qu’il faut savoir
+            </h2>
+            {(serviceSeo[s.slug]?.about ?? [s.lead]).map((p) => (
+              <p data-reveal key={p.slice(0, 24)} className="mt-6 max-w-2xl text-[1.08rem] leading-relaxed text-ink-600">
+                {p}
+              </p>
+            ))}
+            <p data-reveal className="mt-8 text-[0.95rem] text-ink-500">
+              Réservation en ligne ou par téléphone au{' '}
+              <a href={site.phoneHref} className="font-medium text-amber-700 underline underline-offset-4">
+                {site.phone}
+              </a>{' '}
+              — 24h/24, 7j/7.
+            </p>
+          </Reveal>
+          <Reveal as="aside">
+            <h2 data-reveal className="eyebrow text-ink-400">
+              Services liés
+            </h2>
+            <ul className="mt-5 grid gap-1">
+              {related.map((r) => (
+                <li data-reveal key={r.slug}>
+                  <TLink to={`/services/${r.slug}`} className="group flex items-center justify-between gap-4 border-b border-ink-900/10 py-3.5 text-ink-700 transition-colors hover:text-amber-700">
+                    {r.title}
+                    <ArrowRight className="size-4 shrink-0 text-ink-300 transition-[translate,color] duration-500 ease-osmo group-hover:translate-x-1 group-hover:text-amber-600" />
+                  </TLink>
+                </li>
+              ))}
+            </ul>
+            {guides.length > 0 && (
+              <>
+                <h2 data-reveal className="eyebrow mt-10 text-ink-400">
+                  Guides utiles
+                </h2>
+                <ul className="mt-5 grid gap-1">
+                  {guides.map((g) => (
+                    <li data-reveal key={g.slug}>
+                      <TLink to={`/blog/${g.slug}`} className="group flex items-center justify-between gap-4 border-b border-ink-900/10 py-3.5 text-ink-700 transition-colors hover:text-amber-700">
+                        {g.metaTitle}
+                        <ArrowRight className="size-4 shrink-0 text-ink-300 transition-[translate,color] duration-500 ease-osmo group-hover:translate-x-1 group-hover:text-amber-600" />
+                      </TLink>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </Reveal>
+        </div>
+      </section>
+
       <Marquee />
 
       {/* Next service */}
@@ -118,7 +183,7 @@ export default function ServicePage() {
             <p className="eyebrow text-ink-400">Service suivant — {next.index}</p>
             <p className="display mt-5 text-[clamp(2.6rem,7vw,7rem)] transition-colors duration-500 group-hover:text-amber-700">{next.title}</p>
           </div>
-          <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-ink-900 text-white transition-all duration-700 ease-osmo group-hover:-rotate-45 group-hover:bg-amber group-hover:text-ink-900 md:size-24">
+          <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-sky-600 text-white transition-all duration-700 ease-osmo group-hover:-rotate-45 group-hover:bg-sky-700 md:size-24">
             <ArrowRight className="size-6 md:size-8" />
           </span>
         </div>

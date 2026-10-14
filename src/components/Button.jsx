@@ -6,7 +6,7 @@ import { TLink } from '../transition/PageTransition'
 
 const variants = {
   amber: 'bg-amber text-ink-900 hover:bg-amber-300',
-  dark: 'bg-ink-800 text-paper hover:bg-ink-700',
+  dark: 'bg-sky-600 text-white hover:bg-sky-700', // the client's light blue replaces former black buttons
   glass: 'bg-white/[0.08] text-paper backdrop-blur-md hover:bg-white/[0.14] shadow-[inset_0_0_0_1px_rgb(255_255_255/0.12)]',
   paper: 'bg-paper text-ink-900 hover:bg-white',
   outline: 'text-current shadow-[inset_0_0_0_1px_currentColor] hover:bg-current/[0.06]',

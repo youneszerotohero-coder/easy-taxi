@@ -22,9 +22,6 @@ MANIFEST = os.path.join(ROOT, 'src', 'data', 'images.json')
 # name -> Unsplash photo id
 PHOTOS = {
     'hero-luxury-car': '1485291571150-772bcfc10da5',
-    'van-headlights': '1765461734605-34657fa04db2',
-    'chauffeur-van': '1596032457104-baa1f5f9372a',
-    'chauffeur-door': '1730800328198-f9efbf9db53f',
     'driver-hands': '1449965408869-eaa3f722e40d',
     'woman-exit-car': '1698840059740-ba83e510733b',
     'airport-traveller': '1530521954074-e64f6810b32d',

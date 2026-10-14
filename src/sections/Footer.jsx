@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import { gsap, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { serviceCategories, services, site, zones } from '../data/site'
 import { TLink } from '../transition/PageTransition'
 import { LogoMark } from '../components/Logo'
@@ -11,7 +12,7 @@ import { Mail, Phone, Whatsapp } from '../components/icons'
 */
 export default function Footer() {
   const root = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       gsap.from('[data-f-letter]', { yPercent: 100, ease: 'expo.out', stagger: 0.04, duration: 1.4, scrollTrigger: { trigger: '[data-f-word]', start: 'top 98%', once: true } })
@@ -72,6 +73,11 @@ export default function Footer() {
             <p className="eyebrow text-ink-400">Infos</p>
             <ul className="mt-5 grid gap-2.5 text-ink-700">
               <li>
+                <TLink to="/blog" className="hover:text-amber-700">
+                  Blog &amp; guides
+                </TLink>
+              </li>
+              <li>
                 <TLink to="/#faq" className="hover:text-amber-700">
                   FAQ
                 </TLink>
@@ -104,7 +110,7 @@ export default function Footer() {
 
         <div className="mt-8 flex flex-col justify-between gap-3 text-[0.85rem] text-ink-400 md:flex-row">
           <p>
-            © {year} {site.name}. Tous droits réservés.
+            © {year} {site.name} · Taxi — commune de rattachement : {site.communeFull} · SIRET {site.siret}
           </p>
           <p>Photos : Unsplash</p>
         </div>

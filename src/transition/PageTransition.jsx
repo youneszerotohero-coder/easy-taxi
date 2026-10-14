@@ -4,12 +4,13 @@ import { useLocation, useNavigate, useNavigationType } from 'react-router'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/gsap'
 import { getLenis, lockScroll, scrollToTarget, unlockScroll } from '../lib/scroll'
 import { serviceBySlug, site } from '../data/site'
+import { postBySlug } from '../data/blog'
 import { LogoMark } from '../components/Logo'
 import { loadRoute } from '../routes'
 
 /*
   Page transition — "night shift":
-  LEAVE  five ink columns rise from the bottom one after another, an amber headlight line races across
+  LEAVE  five amber columns rise from the bottom one after another, a dark headlight line races across
          the middle and the destination name rises in above it. The route swaps while covered.
   ENTER  the name lifts away, the columns retract upward in the same order and the new page glides up.
 */
@@ -33,6 +34,10 @@ function describe(url) {
   if (section === 'services') {
     const s = serviceBySlug(slug)
     if (s) return { eyebrow: `Service ${s.index}`, title: s.title }
+  }
+  if (section === 'blog') {
+    const p = slug && postBySlug(slug)
+    return p ? { eyebrow: p.category, title: 'Le guide' } : { eyebrow: 'Conseils & guides', title: 'Le blog' }
   }
   return { eyebrow: 'Hors itinéraire', title: 'Page introuvable' }
 }

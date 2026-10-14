@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { img } from '../lib/img'
-import { gsap, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { featuredServices, serviceCategories, services } from '../data/site'
 import { SplitHeading } from '../components/anim'
 import { TLink } from '../transition/PageTransition'
@@ -33,7 +34,7 @@ export default function Services() {
   }
   const slide = (dir) => track.current.scrollBy({ left: dir * stepWidth(), behavior: 'smooth' })
 
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       const mm = gsap.matchMedia()
@@ -143,7 +144,8 @@ export default function Services() {
           </div>
 
           {/* Desktop: grouped lists */}
-          <div className="no-scrollbar mt-6 hidden min-h-0 flex-1 gap-x-8 gap-y-6 overflow-y-auto lg:grid lg:grid-cols-2" data-lenis-prevent>
+          {/* No inner scroll here: a wheel over this card must keep scrolling the page */}
+          <div className="mt-6 hidden min-h-0 flex-1 gap-x-8 gap-y-5 overflow-hidden lg:grid lg:grid-cols-2 short:mt-4 short:gap-y-3">
             {serviceCategories.map((c) => (
               <div key={c.key} className={c.key === 'medical' ? 'lg:row-span-2' : undefined}>
                 <p className="eyebrow text-ink-400">{c.label}</p>
@@ -152,7 +154,7 @@ export default function Services() {
                     .filter((s) => s.category === c.key)
                     .map((s) => (
                       <li key={s.slug}>
-                        <TLink to={`/services/${s.slug}`} className="group/l flex items-center justify-between gap-3 border-b border-ink-900/[0.07] py-2 text-[0.95rem] text-ink-700 transition-colors hover:text-ink-900">
+                        <TLink to={`/services/${s.slug}`} className="group/l flex items-center justify-between gap-3 border-b border-ink-900/[0.07] py-2 text-[0.95rem] text-ink-700 short:py-1 short:text-[0.88rem] transition-colors hover:text-ink-900">
                           {s.title}
                           <span className="text-ink-300 transition-[translate,color] duration-500 ease-osmo group-hover/l:translate-x-1 group-hover/l:text-amber-700">→</span>
                         </TLink>
@@ -187,7 +189,7 @@ export default function Services() {
               onClick={() => slide(dir)}
               className={cx(
                 'flex size-12 items-center justify-center rounded-full transition-[opacity,transform] duration-300 active:scale-90 disabled:opacity-30',
-                dir > 0 ? 'bg-ink-900 text-white' : 'bg-white text-ink-900 ring-1 ring-ink-900/10',
+                dir > 0 ? 'bg-sky-600 text-white' : 'bg-white text-ink-900 ring-1 ring-ink-900/10',
               )}
             >
               <Icon className="size-5" />

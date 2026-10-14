@@ -1,8 +1,9 @@
 import { useRef } from 'react'
 import { gsap } from '../../lib/gsap'
 import { cx } from '../../lib/cx'
+import { img } from '../../lib/img'
 import { ChoiceCard, Chips, Dropzone, ErrorText, Field, Item, Label, Segmented, Stepper, Toggle } from './fields'
-import { Bag, Bank, Card, Cash, Clock, Cross, Flag, Mail, Phone, Pin, Plane, Shield, User, Users, Wheelchair } from '../icons'
+import { Bag, Bank, Card, Cash, Clock, Cross, Flag, Mail, Phone, Pin, Shield, User, Users, Wheelchair } from '../icons'
 
 /*
   Booking steps. Each step is deliberately short (3–5 controls) so it fits inside the panel without
@@ -22,7 +23,6 @@ export const emptyForm = {
   time: '',
   returnDate: '',
   returnTime: '',
-  flight: '',
   // passengers
   passengers: 1,
   bags: 1,
@@ -53,7 +53,6 @@ const REASONS = ['Consultation', 'Hôpital de jour', 'Chirurgie ambulatoire', 'C
 const INSURANCES = ['CPAM', 'MSA', 'MGEN', 'SSI', 'Autre']
 
 export const today = () => new Date().toISOString().slice(0, 10)
-const isAirport = (s) => /a[ée]roport|cdg|orly|roissy|tillé|bva/i.test(s || '')
 const phoneOk = (p) => p.replace(/\D/g, '').length >= 9
 const emailOk = (e) => !e || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)
 
@@ -106,7 +105,6 @@ function Names({ form, set, errors, lastLabel = 'Nom' }) {
 /* ──────────────────────────────── private steps ──────────────────────────────── */
 
 function TripStep({ form, set, errors }) {
-  const airport = isAirport(form.pickup) || isAirport(form.dropoff)
   return (
     <>
       <Route form={form} set={set} errors={errors} />
@@ -119,16 +117,6 @@ function TripStep({ form, set, errors }) {
             { value: 'oneway', label: 'Aller simple' },
             { value: 'return', label: 'Aller-retour' },
           ]}
-        />
-      </Item>
-      <Item>
-        <Field
-          label="Numéro de vol"
-          hint={airport ? 'Recommandé — nous suivons votre vol' : 'Optionnel'}
-          icon={Plane}
-          placeholder="Ex. FR 1234"
-          value={form.flight}
-          onChange={(e) => set({ flight: e.target.value.toUpperCase() })}
         />
       </Item>
     </>
@@ -172,39 +160,19 @@ function WhenStep({ form, set, errors }) {
 }
 
 function PassengersStep({ form, set }) {
-  const needsVan = form.passengers > 4 || form.bags > 4
-  const update = (patch) => {
-    const next = { ...form, ...patch }
-    set(next.passengers > 4 || next.bags > 4 ? { ...patch, vehicle: 'van' } : patch)
-  }
+  // One vehicle: a comfortable saloon — up to 4 passengers and 4 suitcases
   const options = [form.childSeat && 'child', form.wheelchair && 'wheelchair'].filter(Boolean)
   return (
     <>
       <Item className="grid gap-2 lg:grid-cols-2">
-        <Stepper label="Passagers" icon={Users} value={form.passengers} min={1} max={8} onChange={(v) => update({ passengers: v })} note="Jusqu’à 8" />
-        <Stepper label="Bagages" icon={Bag} value={form.bags} min={0} max={8} onChange={(v) => update({ bags: v })} note="En soute" />
+        <Stepper label="Passagers" icon={Users} value={form.passengers} min={1} max={4} onChange={(v) => set({ passengers: v })} note="Jusqu’à 4" />
+        <Stepper label="Bagages" icon={Bag} value={form.bags} min={0} max={4} onChange={(v) => set({ bags: v })} note="Valises en soute" />
       </Item>
-      <Item>
-        <Label hint={needsVan ? 'Van conseillé pour votre groupe' : null}>Véhicule</Label>
-        <div className="grid grid-cols-2 gap-2 sm:gap-3">
-          <ChoiceCard
-            selected={form.vehicle === 'berline'}
-            disabled={needsVan}
-            onClick={() => set({ vehicle: 'berline' })}
-            image="/images/mercedes-front.webp"
-            imageClassName="aspect-[16/7] short:aspect-[16/4]"
-            title="Berline"
-            text="1–4 pers. · 3 valises"
-          />
-          <ChoiceCard
-            selected={form.vehicle === 'van'}
-            onClick={() => set({ vehicle: 'van' })}
-            image="/images/van-headlights.webp"
-            imageClassName="aspect-[16/7] short:aspect-[16/4]"
-            title="Van 8 places"
-            text="Jusqu’à 8 · 8 valises"
-            badge={needsVan ? 'Conseillé' : null}
-          />
+      <Item className="flex items-center gap-4 overflow-hidden rounded-2xl bg-ink-900/[0.035] ring-1 ring-ink-900/10">
+        <img {...img('/images/mercedes-front.webp', '160px')} alt="" decoding="async" className="h-20 w-28 shrink-0 object-cover short:h-16" />
+        <div className="min-w-0 py-2 pr-4">
+          <p className="font-medium">Berline confort</p>
+          <p className="text-[0.82rem] leading-snug text-ink-500">Climatisée, 4 passagers, grand coffre. Plus de place ? Appelez-nous.</p>
         </div>
       </Item>
       <Item>
@@ -324,7 +292,7 @@ function InsuranceStep({ form, set, errors }) {
         <Segmented size="sm" value={form.insurance} onChange={(v) => set({ insurance: v })} options={INSURANCES.map((v) => ({ value: v, label: v }))} />
       </Item>
       <Item>
-        <Toggle checked={form.wheelchair} onChange={(v) => set({ wheelchair: v })} icon={Wheelchair} title="Patient en fauteuil roulant" text="Nous adaptons le véhicule" />
+        <Toggle checked={form.wheelchair} onChange={(v) => set({ wheelchair: v })} icon={Wheelchair} title="Patient en fauteuil roulant" text="Aide au transfert, fauteuil pliant en coffre" />
       </Item>
     </>
   )
@@ -405,11 +373,10 @@ function RecapStep({ form, set, errors }) {
     : [
         ['Passager', `${form.firstName} ${form.lastName}`],
         ['Quand', form.asap ? 'Dès que possible' : `${fmtDate(form.date)} à ${form.time}`],
-        ['Groupe', `${form.passengers} pers. · ${form.bags} bagage${form.bags > 1 ? 's' : ''} · ${form.vehicle === 'van' ? 'Van' : 'Berline'}`],
+        ['Groupe', `${form.passengers} pers. · ${form.bags} bagage${form.bags > 1 ? 's' : ''}`],
         ['Trajet', form.tripType === 'return' ? `Aller-retour · ${fmtDate(form.returnDate)} ${form.returnTime}` : 'Aller simple'],
         ['Paiement', PAY[form.payment]],
       ]
-  if (!medical && form.flight) rows.splice(2, 0, ['Vol', form.flight])
 
   return (
     <>
@@ -497,7 +464,7 @@ export const flows = {
         ...(f.tripType === 'return' ? required(f, ['returnDate', 'returnTime']) : {}),
       }),
     },
-    { key: 'group', title: 'Passagers & véhicule', short: 'Passagers', desc: 'Combien êtes-vous à bord ?', Component: PassengersStep, validate: () => ({}) },
+    { key: 'group', title: 'Passagers & bagages', short: 'Passagers', desc: 'Combien êtes-vous à bord ?', Component: PassengersStep, validate: () => ({}) },
     { key: 'contact', title: 'Vos coordonnées', short: 'Contact', desc: 'Pour que le chauffeur puisse vous joindre.', Component: ContactStep, validate: validatePerson },
     { key: 'payment', title: 'Paiement', short: 'Paiement', desc: 'Réglez à bord, comme vous préférez.', Component: PaymentStep, validate: () => ({}) },
     { key: 'recap', title: 'Récapitulatif', short: 'Confirmer', desc: 'Vérifiez, c’est presque parti.', Component: RecapStep, validate: validateConsent },

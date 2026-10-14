@@ -24,7 +24,7 @@ export default function About() {
 
         {/* Collage */}
         <div className="mt-20 grid gap-4 md:mt-28 md:grid-cols-12 md:gap-6">
-          <ParallaxImage src="/images/chauffeur-door.webp" alt="Chauffeur ouvrant la porte d’un van" className="aspect-[4/5] rounded-[1.75rem] md:col-span-5 md:aspect-auto md:h-[44rem]" />
+          <ParallaxImage src="/images/woman-exit-car.webp" alt="Passagère descendant d’une berline" className="aspect-[4/5] rounded-[1.75rem] md:col-span-5 md:aspect-auto md:h-[44rem]" />
           <div className="flex flex-col gap-4 md:col-span-7 md:gap-6">
             <ParallaxImage src="/images/driver-hands.webp" alt="Chauffeur au volant" from="right" className="aspect-[16/10] rounded-[1.75rem] md:aspect-auto md:h-[26rem]" />
             <Reveal className="grid flex-1 gap-4 sm:grid-cols-3 md:gap-6">

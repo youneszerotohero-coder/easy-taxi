@@ -17,7 +17,7 @@ export default function Logo({ className }) {
     <span className={cx('inline-flex items-center gap-2.5', className)}>
       <LogoMark />
       <span className="flex flex-col leading-none">
-        <span className="font-display text-[1.15rem] font-semibold tracking-[-0.03em]">{site.name}</span>
+        <span className="font-display text-[1.15rem] font-semibold tracking-[-0.03em]">{site.short}</span>
         <span className="eyebrow mt-1 !text-[0.58rem] opacity-55">{site.tagline}</span>
       </span>
     </span>

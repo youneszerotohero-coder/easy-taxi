@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { img } from '../lib/img'
-import { gsap, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { useBooking } from '../context/BookingContext'
 import { ParallaxImage, SplitHeading } from '../components/anim'
 import { ArrowUpRight } from '../components/icons'
@@ -18,7 +19,7 @@ export default function Destinations() {
   // The 7 hover photos only download once the visitor actually hovers the list (desktop only)
   const [armed, setArmed] = useState(false)
 
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       gsap.fromTo(

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { img } from '../lib/img'
-import { gsap, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { fleet } from '../data/site'
 import { SplitHeading } from '../components/anim'
 import { useBooking } from '../context/BookingContext'
@@ -15,12 +16,12 @@ export default function Fleet() {
   const { openBooking } = useBooking()
   const root = useRef(null)
 
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       gsap.from('[data-car-card]', {
         y: 160,
-        rotate: (i) => [-8, 0, 8][i],
+        rotate: (i) => [-6, 6][i],
         autoAlpha: 0,
         duration: 1.5,
         ease: 'expo.out',
@@ -64,16 +65,16 @@ export default function Fleet() {
               <br />à chaque trajet.
             </SplitHeading>
           </div>
-          <p className="max-w-sm text-ink-500">Récents, climatisés et impeccables. De 1 à 8 passagers, avec la place pour tous les bagages.</p>
+          <p className="max-w-sm text-ink-500">Récents, climatisés et impeccables. Jusqu’à 4 passagers, avec la place pour vos bagages.</p>
         </div>
 
-        <div data-cards className="mt-16 grid gap-5 [perspective:1400px] md:grid-cols-3">
+        <div data-cards className="mt-16 grid gap-5 [perspective:1400px] md:grid-cols-2">
           {fleet.map((v) => (
             <button
               key={v.name}
               type="button"
               data-car-card
-              onClick={(e) => openBooking({ mode: v.seats === 3 ? 'medical' : 'private' }, e.currentTarget)}
+              onClick={(e) => openBooking({ mode: v.mode ?? 'private' }, e.currentTarget)}
               className="group relative flex flex-col overflow-hidden rounded-[1.75rem] bg-paper text-left ring-1 ring-ink-900/[0.05] [transform-style:preserve-3d]"
             >
               <div className="relative aspect-[4/3] overflow-hidden">
@@ -83,7 +84,7 @@ export default function Fleet() {
               <div className="flex flex-1 flex-col p-6 [transform:translateZ(40px)]">
                 <div className="flex items-start justify-between gap-4">
                   <h3 className="display text-[2rem]">{v.name}</h3>
-                  <ArrowChip className="bg-ink-900 text-white group-hover:bg-amber group-hover:text-ink-900" />
+                  <ArrowChip className="bg-sky-600 text-white group-hover:bg-sky-700" />
                 </div>
                 <p className="mt-2 text-ink-500">{v.note}</p>
                 <div className="mt-auto flex gap-2 pt-8">

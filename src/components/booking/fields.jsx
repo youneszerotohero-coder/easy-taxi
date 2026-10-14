@@ -67,11 +67,36 @@ export function Segmented({ value, onChange, options, className, size = 'md' }) 
   const pill = useRef(null)
   const index = Math.max(0, options.findIndex((o) => o.value === value))
 
+  const indexRef = useRef(index)
+  indexRef.current = index
+  const measure = () => {
+    const btn = wrap.current?.children[indexRef.current + 1]
+    return btn && { x: btn.offsetLeft, width: btn.offsetWidth }
+  }
+
+  // Slide to the selected option when it changes (placed instantly the first time)
+  const placed = useRef(false)
   useLayoutEffect(() => {
-    const btn = wrap.current?.children[index + 1]
-    if (!btn) return
-    gsap.to(pill.current, { x: btn.offsetLeft, width: btn.offsetWidth, duration: 0.55, ease: 'osmo' })
+    const to = measure()
+    if (!to) return
+    if (!placed.current) {
+      placed.current = true
+      gsap.set(pill.current, to)
+    } else gsap.to(pill.current, { ...to, duration: 0.55, ease: 'osmo', overwrite: true })
   }, [index, options.length])
+
+  // The booking panel sizes itself after this mounts (and fonts can land late), so snap the pill
+  // to the right spot whenever the control's size changes — otherwise it opens offset until the first click
+  useLayoutEffect(() => {
+    const ro = new ResizeObserver(() => {
+      const to = measure()
+      if (!to) return
+      gsap.killTweensOf(pill.current) // a slide started with stale sizes would otherwise land in the wrong place
+      gsap.set(pill.current, to)
+    })
+    ro.observe(wrap.current)
+    return () => ro.disconnect()
+  }, [])
 
   return (
     <div ref={wrap} role="radiogroup" className={cx('relative flex rounded-full bg-ink-900/[0.05] p-1 ring-1 ring-ink-900/10', className)}>
@@ -86,7 +111,7 @@ export function Segmented({ value, onChange, options, className, size = 'md' }) 
           className={cx(
             'relative z-10 flex flex-1 items-center justify-center gap-2 rounded-full font-medium whitespace-nowrap transition-colors duration-300',
             size === 'sm' ? 'h-9 px-3 text-[0.85rem]' : 'h-11 px-4 text-[0.95rem] short:h-10',
-            o.value === value ? 'text-ink-900' : 'text-ink-700 hover:text-ink-900',
+            o.value === value ? 'text-ink-900' : 'text-ink-500 hover:text-ink-900',
           )}
         >
           {o.icon && <o.icon className="size-4 shrink-0" />}

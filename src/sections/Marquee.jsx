@@ -1,15 +1,16 @@
 import { useRef } from 'react'
-import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { zones } from '../data/site'
 import { cx } from '../lib/cx'
 
 /*
-  Tilted amber band of destinations. It drifts on its own and the scroll velocity pushes it faster
+  Amber band of destinations. It drifts on its own and the scroll velocity pushes it faster
   (and flips its direction when you scroll back up).
 */
 export default function Marquee({ items = zones, tone = 'amber', className }) {
   const root = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       const track = root.current.querySelector('[data-track]')

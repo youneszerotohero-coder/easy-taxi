@@ -1,14 +1,20 @@
 // Single source of truth for the brand — swap these when the client confirms their details.
 export const site = {
-  name: 'Easy Taxi',
+  name: 'Easy Taxi du Beauvaisis',
   short: 'Easy Taxi',
-  tagline: 'Taxi Beauvais & Oise',
-  phone: '+33 6 00 00 00 00',
-  phoneHref: 'tel:+33600000000',
-  whatsapp: 'https://wa.me/33600000000',
+  tagline: 'du Beauvaisis',
+  phone: '07 59 93 05 80',
+  phoneIntl: '+33 7 59 93 05 80',
+  phoneHref: 'tel:+33759930580',
+  whatsapp: 'https://wa.me/33759930580',
   email: 'contact@easytaxi.fr',
   city: 'Beauvais, Oise (60)',
   hours: '24h/24 · 7j/7 · jours fériés inclus',
+  // Mandatory mentions for a licensed taxi
+  siret: '825 360 456 00024',
+  commune: 'Rainvillers',
+  communeFull: 'Rainvillers (60155)',
+  url: 'https://www.easytaxi-beauvaisis.fr', // ← replace with the final domain
 }
 
 const img = (name) => `/images/${name}.webp`
@@ -126,16 +132,34 @@ const catalogue = [
     places: ['AP-HP Paris', 'Cliniques parisiennes', 'Centres spécialisés', 'Île-de-France'],
   },
 
+  {
+    slug: 'taxi-conventionne-ou-ambulance-beauvais',
+    category: 'medical',
+    kind: 'medical',
+    title: 'Ambulance ou taxi conventionné à Beauvais ?',
+    short: 'Transport assis',
+    lead: 'Vous pouvez voyager assis ? Le taxi conventionné est l’alternative à l’ambulance prise en charge par l’Assurance Maladie, à Beauvais et dans toute l’Oise.',
+    image: img('care-caregiver'),
+    gallery: [img('care-nurse'), img('hospital-building'), img('rear-seats')],
+    points: [
+      'Pour les patients pouvant voyager assis (transport assis professionnalisé)',
+      'Prise en charge CPAM sur prescription médicale',
+      'Plus disponible et plus confortable pour les trajets réguliers',
+      'Si votre état exige une ambulance, nous vous orientons',
+    ],
+    places: ['CH Beauvais', 'CHU Amiens-Picardie', 'CHU Rouen Charles-Nicolle', 'AP-HP Paris'],
+  },
+
   /* ───────── Aéroports & loisirs ───────── */
   {
     slug: 'taxi-aeroport-beauvais-tille-bva',
     category: 'airports',
     kind: 'private',
-    title: 'Aéroport Beauvais-Tillé (BVA)',
+    title: 'Taxi aéroport Beauvais-Tillé',
     short: 'Aéroport BVA',
     lead: 'Navettes vers et depuis l’aéroport de Beauvais-Tillé, avec suivi de vos horaires de vol : on vous attend même si l’avion a du retard.',
     image: img('airport-plane'),
-    gallery: [img('airport-silhouettes'), img('luggage-chauffeur'), img('van-headlights')],
+    gallery: [img('airport-silhouettes'), img('luggage-chauffeur'), img('mercedes-grille')],
     points: [
       'Suivi des horaires de vol en temps réel',
       'Accueil en zone d’arrivée',
@@ -157,7 +181,7 @@ const catalogue = [
     points: [
       'Suivi des vols en temps réel',
       'Tous les terminaux de Roissy-CDG',
-      'Jusqu’à 8 passagers et leurs bagages',
+      'Jusqu’à 4 passagers et leurs bagages',
       'Tarif sur devis, sans surprise',
     ],
     places: ['Roissy-CDG', 'Beauvais-Tillé (BVA)', 'Paris-Orly', 'Gare du Nord'],
@@ -187,9 +211,9 @@ const catalogue = [
     short: 'Famille & loisirs',
     lead: 'De chez vous ou de l’aéroport jusqu’aux portes du parc : sièges enfants sur demande et un grand coffre pour les valises de toute la famille.',
     image: img('disneyland-paris'),
-    gallery: [img('luggage-couple'), img('rear-seats'), img('van-headlights')],
+    gallery: [img('luggage-couple'), img('rear-seats'), img('mercedes-grille')],
     points: [
-      'Van jusqu’à 8 places pour les familles',
+      'Berline confortable, jusqu’à 4 passagers',
       'Sièges et rehausseurs enfants',
       'Dépose aux hôtels du resort',
       'Retour à l’heure qui vous arrange',
@@ -199,14 +223,31 @@ const catalogue = [
 
   /* ───────── Autres services ───────── */
   {
+    slug: 'taxi-gare-beauvais',
+    category: 'other',
+    kind: 'private',
+    title: 'Taxi gare de Beauvais',
+    short: 'Gare SNCF',
+    lead: 'Un taxi qui vous attend à la gare SNCF de Beauvais, ou qui vous y dépose à l’heure pour votre train, de jour comme de nuit.',
+    image: img('station'),
+    gallery: [img('luggage-chauffeur'), img('paris-street'), img('rear-seats')],
+    points: [
+      'Prise en charge à la sortie de la gare, horaire du train suivi',
+      'Dépose à l’heure pour vos départs',
+      'Correspondances vers l’aéroport de Beauvais-Tillé',
+      'Disponible 24h/24, réservation à l’avance ou immédiate',
+    ],
+    places: ['Gare de Beauvais', 'Aéroport Beauvais-Tillé', 'Centre-ville', 'CH Beauvais'],
+  },
+  {
     slug: 'transport-prive-oise',
     category: 'other',
     kind: 'private',
     title: 'Transport privé Oise',
     card: 'Transport privé',
     short: 'Gares, sorties, événements',
-    lead: 'Vos trajets au départ ou à destination de Beauvais : gares, aéroports, sorties, événements. Des véhicules de 4 à 8 places et un chauffeur professionnel et ponctuel.',
-    image: img('chauffeur-van'),
+    lead: 'Vos trajets au départ ou à destination de Beauvais : gares, aéroports, sorties, événements. Une berline confortable jusqu’à 4 passagers et un chauffeur professionnel et ponctuel.',
+    image: img('luggage-chauffeur'),
     gallery: [img('station'), img('paris-street'), img('taxi-signs')],
     points: [
       'Réservation immédiate ou à l’avance',
@@ -229,7 +270,7 @@ const catalogue = [
       'Devis personnalisé et transparent',
       'Pauses à la demande',
       'Aller simple ou aller-retour',
-      'Véhicule climatisé, jusqu’à 8 passagers',
+      'Véhicule climatisé, jusqu’à 4 passagers',
     ],
     places: ['Paris', 'Rouen', 'Amiens', 'Lille'],
   },
@@ -240,7 +281,7 @@ const catalogue = [
     title: 'Mise à disposition chauffeur',
     short: 'Chauffeur à l’heure',
     lead: 'Un chauffeur et son véhicule à votre disposition pour une soirée, un mariage, un séminaire ou une journée de rendez-vous.',
-    image: img('chauffeur-door'),
+    image: img('mercedes-front'),
     gallery: [img('woman-exit-car'), img('mercedes-front'), img('paris-champs')],
     points: [
       'Facturation à l’heure ou à la journée',
@@ -291,24 +332,18 @@ export const fleet = [
     note: 'Idéale pour les trajets médicaux, la gare et les rendez-vous.',
   },
   {
-    name: 'Van 8 places',
-    seats: 8,
-    bags: 8,
-    image: img('van-headlights'),
-    note: 'Familles, groupes, aéroports avec beaucoup de bagages.',
-  },
-  {
-    name: 'Accès fauteuil',
-    seats: 3,
+    name: 'Transport assis',
+    mode: 'medical',
+    seats: 4,
     bags: 2,
     image: img('care-walker'),
-    note: 'Accompagnement des patients à mobilité réduite.',
+    note: 'Accompagnement des patients conventionnés, de la porte jusqu’au service.',
   },
 ]
 
 export const stats = [
   { value: 24, suffix: '/7', label: 'Disponibilité, jours fériés inclus' },
-  { value: 8, suffix: '', label: 'Passagers max. par véhicule' },
+  { value: 4, suffix: '', label: 'Passagers par course, bagages compris' },
   { value: 12, suffix: 'k+', label: 'Courses réalisées' },
   { value: 4.9, suffix: '★', label: 'Note moyenne clients', decimals: 1 },
 ]
@@ -325,7 +360,7 @@ export const testimonials = [
     role: 'Transfert aéroport',
   },
   {
-    quote: 'Van 8 places pour Disneyland avec trois enfants et cinq valises. Sièges auto prêts, voiture impeccable. Les petits ont adoré.',
+    quote: 'Taxi pour Disneyland avec deux enfants et trois valises. Sièges auto prêts, voiture impeccable. Les petits ont adoré.',
     name: 'Sarah & Karim',
     role: 'Famille, Compiègne',
   },
@@ -355,7 +390,11 @@ export const faq = [
   },
   {
     q: 'Transportez-vous les personnes en fauteuil roulant ?',
-    a: 'Oui, signalez-le lors de la réservation : nous envoyons un véhicule adapté et le chauffeur vous accompagne jusqu’à la porte.',
+    a: 'Oui, si vous pouvez passer du fauteuil au siège : signalez-le à la réservation, le chauffeur vous aide à vous installer et range votre fauteuil pliant dans le coffre.',
+  },
+  {
+    q: 'Êtes-vous une ambulance ?',
+    a: 'Non. Nous sommes un taxi conventionné : nous transportons les patients qui peuvent voyager assis, avec la même prise en charge par l’Assurance Maladie sur prescription. Si votre médecin prescrit une ambulance, nous vous orientons vers un service ambulancier.',
   },
 ]
 

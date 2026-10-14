@@ -18,12 +18,14 @@ function preloadFonts() {
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), preloadFonts()],
+  // The pre-renderer runs the app in Node: bundle the animation libs (their ESM entry points aren't Node-ready)
+  ssr: { noExternal: ['gsap', '@gsap/react', 'lenis'] },
   build: {
     target: 'es2022',
     rolldownOptions: {
       output: {
         // Long-lived vendor chunks: they change far less often than the site's own code, so browsers keep them cached
-        advancedChunks: {
+        codeSplitting: {
           groups: [
             { name: 'react', test: /node_modules[\/](react|react-dom|react-router|scheduler)[\/]/ },
             { name: 'animation', test: /node_modules[\/](gsap|@gsap|lenis)[\/]/ },

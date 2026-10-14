@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { img } from '../lib/img'
-import { gsap, ScrollTrigger, SplitText, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, ScrollTrigger, SplitText, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { cx } from '../lib/cx'
 
 /*
@@ -12,7 +13,7 @@ import { cx } from '../lib/cx'
 /** Heading split into masked lines that slide up */
 export function SplitHeading({ as: Tag = 'h2', className, children, delay = 0, immediate = false, stagger = 0.08, type = 'lines' }) {
   const ref = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       // autoSplit re-splits once the webfont lands (or on resize) and hands the tween over
@@ -46,7 +47,7 @@ export function SplitHeading({ as: Tag = 'h2', className, children, delay = 0, i
 /** Children marked [data-reveal] fade & rise in, staggered */
 export function Reveal({ as: Tag = 'div', className, children, y = 40, stagger = 0.08, delay = 0, immediate = false, ...props }) {
   const ref = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       if (prefersReducedMotion()) return
       const items = ref.current.querySelectorAll('[data-reveal]')
@@ -72,7 +73,7 @@ export function Reveal({ as: Tag = 'div', className, children, y = 40, stagger =
 /** Image revealed by a clip that opens upward, then drifts with a scrubbed parallax */
 export function ParallaxImage({ src, alt = '', className, imgClassName, speed = 12, reveal = true, from = 'bottom', sizes = '(min-width: 1024px) 50vw, 100vw', children }) {
   const ref = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       const img = ref.current.querySelector('img')
       if (prefersReducedMotion()) return
@@ -97,7 +98,7 @@ export function ParallaxImage({ src, alt = '', className, imgClassName, speed = 
 /** Number that counts up when visible */
 export function Counter({ value, decimals = 0, suffix = '', className }) {
   const ref = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       const obj = { v: 0 }
       const write = () => (ref.current.textContent = obj.v.toFixed(decimals).replace('.', ','))
@@ -121,7 +122,7 @@ export function Counter({ value, decimals = 0, suffix = '', className }) {
 /** Element drifts toward the pointer while hovered */
 export function Magnetic({ children, strength = 0.35, className }) {
   const ref = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       const el = ref.current
       if (prefersReducedMotion() || matchMedia('(hover: none)').matches) return
@@ -155,7 +156,7 @@ export function Magnetic({ children, strength = 0.35, className }) {
 /** Paragraph whose words light up one by one as you scroll through it */
 export function ScrubText({ text, className, highlight = [] }) {
   const ref = useRef(null)
-  useGSAP(
+  useLazyGSAP(
     () => {
       const words = ref.current.querySelectorAll('[data-word]')
       if (prefersReducedMotion()) return gsap.set(words, { opacity: 1 })

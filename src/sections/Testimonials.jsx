@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap, ScrollTrigger, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { testimonials } from '../data/site'
 import { ParallaxImage } from '../components/anim'
 import { ArrowLeft, ArrowRight, Star } from '../components/icons'
@@ -20,20 +21,20 @@ export default function Testimonials() {
   const [paused, setPaused] = useState(true)
   const first = useRef(true)
 
-  // Only run the clock while the section is on screen
-  useEffect(() => {
-    const st = ScrollTrigger.create({ trigger: root.current, start: 'top 75%', end: 'bottom 25%', onToggle: (self) => setPaused(!self.isActive) })
-    return () => st.kill()
-  }, [])
+  // First reveal + "only run the clock while on screen": built with the other below-the-fold animations (lib/animReady)
+  useLazyGSAP(
+    () => {
+      ScrollTrigger.create({ trigger: root.current, start: 'top 75%', end: 'bottom 25%', onToggle: (self) => setPaused(!self.isActive) })
+      if (prefersReducedMotion()) return
+      gsap.from(quote.current.querySelectorAll('[data-qw]'), { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.012, scrollTrigger: { trigger: quote.current, start: 'top 85%', once: true } })
+    },
+    { scope: root },
+  )
 
-  // Words in
+  // Words in when the quote changes
   useLayoutEffect(() => {
+    if (first.current) return void (first.current = false)
     const words = quote.current.querySelectorAll('[data-qw]')
-    if (first.current) {
-      first.current = false
-      gsap.from(words, { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.012, scrollTrigger: { trigger: quote.current, start: 'top 85%', once: true } })
-      return
-    }
     if (prefersReducedMotion()) return
     gsap.fromTo(words, { yPercent: 110, rotate: 4 }, { yPercent: 0, rotate: 0, duration: 1, ease: 'expo.out', stagger: 0.012 })
     gsap.fromTo('[data-q-meta]', { autoAlpha: 0, y: 12 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'osmo', delay: 0.2 })
@@ -41,7 +42,8 @@ export default function Testimonials() {
 
   // Story bars
   useEffect(() => {
-    bars.current.forEach((b, i) => gsap.set(b, { scaleX: i < index ? 1 : 0 }))
+    // (the bars start at scaleX(0) in CSS — only touch them once the quotes have moved on)
+    if (index > 0) bars.current.forEach((b, i) => gsap.set(b, { scaleX: i < index ? 1 : 0 }))
     timer.current?.kill()
     timer.current = gsap.to(bars.current[index], { scaleX: 1, duration: DURATION, ease: 'none', paused, onComplete: () => go(1) })
     return () => timer.current?.kill()
@@ -81,14 +83,14 @@ export default function Testimonials() {
               <p className="mt-1 text-[0.92rem] text-ink-500">Plus de 300 avis vérifiés</p>
             </div>
           </div>
-          <ParallaxImage src="/images/woman-exit-car.webp" alt="Passagère sortant d’un véhicule" className="mt-10 hidden aspect-[4/3] rounded-[1.75rem] lg:block" />
+          <ParallaxImage src="/images/luggage-couple.webp" alt="Couple chargeant ses valises dans le coffre" className="mt-10 hidden aspect-[4/3] rounded-[1.75rem] lg:block" />
         </div>
 
         <div className="flex flex-col">
           <div className="flex gap-1.5">
             {testimonials.map((_, i) => (
               <span key={i} className="h-[3px] flex-1 overflow-hidden rounded-full bg-ink-900/10">
-                <span ref={(el) => (bars.current[i] = el)} className="block h-full origin-left scale-x-0 bg-ink-900" />
+                <span ref={(el) => (bars.current[i] = el)} className="block h-full origin-left scale-x-0 bg-sky-600" />
               </span>
             ))}
           </div>
@@ -120,7 +122,7 @@ export default function Testimonials() {
                   type="button"
                   aria-label={label}
                   onClick={() => go(d)}
-                  className={cx('flex size-14 items-center justify-center rounded-full transition-colors duration-300', d > 0 ? 'bg-ink-900 text-white hover:bg-amber hover:text-ink-900' : 'ring-1 ring-ink-900/20 hover:bg-ink-900/5')}
+                  className={cx('flex size-14 items-center justify-center rounded-full transition-colors duration-300', d > 0 ? 'bg-sky-600 text-white hover:bg-sky-700' : 'ring-1 ring-ink-900/20 hover:bg-ink-900/5')}
                 >
                   <Icon className="size-5" />
                 </button>

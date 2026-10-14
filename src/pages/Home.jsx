@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { requestRefresh } from '../lib/scroll'
+import { Suspense } from 'react'
 import Hero from '../sections/Hero'
 import Marquee from '../sections/Marquee'
 import About from '../sections/About'
@@ -9,33 +8,28 @@ import Process from '../sections/Process'
 import Fleet from '../sections/Fleet'
 import Destinations from '../sections/Destinations'
 import Testimonials from '../sections/Testimonials'
+import BlogTeaser from '../sections/BlogTeaser'
 import Faq from '../sections/Faq'
 import Cta from '../sections/Cta'
 import Footer from '../sections/Footer'
 
 const BandMarquee = () => <Marquee className="-my-px" />
-const below = [BandMarquee, About, Services, Medical, Process, Fleet, Destinations, Testimonials, Faq, Cta, Footer]
-const PER_TICK = 2
+const below = [BandMarquee, About, Services, Medical, Process, Fleet, Destinations, Testimonials, BlogTeaser, Faq, Cta, Footer]
 
 /*
-  The hero renders straight away; the sections below mount a couple at a time on the following ticks.
-  Each section sets up its own animations when it mounts, so spreading them out turns one long
-  main-thread block into short tasks (the intro stays smooth). Arriving on an anchor (/#faq) mounts everything at once.
+  Every section is in the HTML from the start (pre-rendered for search engines).
+  - Each section below the hero sits in its own <Suspense> boundary: React then hydrates them one by one,
+    yielding to the browser in between, instead of in one long block.
+  - Their animations are only built once the hero intro has finished (lib/animReady), one section at a time.
 */
 export default function Home() {
-  const [count, setCount] = useState(() => (window.location.hash ? below.length : 0))
-
-  useEffect(() => {
-    if (count >= below.length) return requestRefresh()
-    const id = setTimeout(() => setCount((c) => Math.min(below.length, c + PER_TICK)), 16)
-    return () => clearTimeout(id)
-  }, [count])
-
   return (
     <>
       <Hero />
-      {below.slice(0, count).map((Section, i) => (
-        <Section key={i} />
+      {below.map((Section, i) => (
+        <Suspense key={i} fallback={null}>
+          <Section />
+        </Suspense>
       ))}
     </>
   )

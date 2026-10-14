@@ -1,5 +1,6 @@
 import { useRef } from 'react'
-import { gsap, useGSAP, prefersReducedMotion } from '../lib/gsap'
+import { gsap, prefersReducedMotion } from '../lib/gsap'
+import { useLazyGSAP } from '../lib/animReady'
 import { SplitHeading } from '../components/anim'
 import { Calendar, Car, Flag, Phone } from '../components/icons'
 
@@ -24,7 +25,7 @@ const STOPS_X = [175, 525, 875, 1225] // centres of the four step columns
 export default function Process() {
   const root = useRef(null)
 
-  useGSAP(
+  useLazyGSAP(
     () => {
       const q = gsap.utils.selector(root)
       const mm = gsap.matchMedia()

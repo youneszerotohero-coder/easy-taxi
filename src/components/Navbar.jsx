@@ -16,6 +16,7 @@ const links = [
   { label: 'Médical', to: '/#medical' },
   { label: 'Flotte', to: '/#flotte' },
   { label: 'Destinations', to: '/#destinations' },
+  { label: 'Blog', to: '/blog' },
   { label: 'FAQ', to: '/#faq' },
 ]
 
@@ -27,7 +28,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { pathname } = useLocation()
-  // Over the home page's night photo (before the bar turns into white glass) the bar uses white text
+  // Over the homepage's dark hero (before the bar turns into white glass) the bar uses white text
   const onDark = !scrolled && !open && pathname === '/'
 
   // Drops in after the intro, then stays pinned to the top; scrolling only switches it to white glass
